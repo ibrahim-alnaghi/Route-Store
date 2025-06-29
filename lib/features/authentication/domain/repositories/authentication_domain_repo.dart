@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/failures/failures.dart';
 import '../../data/models/login_model/login_request_body.dart';
 import '../../data/models/reset_password_request_body.dart';
-import '../../data/models/signup_model%20/signup_request_body.dart';
+import '../../data/models/signup_model/signup_request_body.dart';
 import '../entities/user_entity.dart';
 
 abstract class AuthenticationDomainRepo {

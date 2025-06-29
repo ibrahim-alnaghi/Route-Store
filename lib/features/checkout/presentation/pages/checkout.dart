@@ -10,7 +10,6 @@ import '../../../../core/routes/routes.dart';
 import '../../../../core/widgets/app_bar/custom_app_bar.dart';
 import '../../../../core/widgets/containers/rounded_container.dart';
 import '../../../../core/widgets/success_screen/success_screen.dart';
-import '../../../cart/presentation/widgets/cart_items.dart';
 import '../widgets/billing_adress_section.dart';
 import '../widgets/billing_amount_section.dart';
 import '../widgets/billing_payment_section.dart';
