@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/enums.dart';
-import '../../../data/models/signup_model%20/signup_request_body.dart';
+import '../../../data/models/signup_model/signup_request_body.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/usecases/sign_up_use_case.dart';
 
