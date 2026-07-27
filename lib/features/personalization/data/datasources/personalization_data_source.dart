@@ -4,4 +4,5 @@ import '../models/adress_model.dart';
 abstract class PersonalizationDataSource {
   Future<List<AdressModel>> getAdresses();
   Future<void> addAdress(AddAdressRequestBody body);
+  Future<void> removeAdress(String addressId);
 }

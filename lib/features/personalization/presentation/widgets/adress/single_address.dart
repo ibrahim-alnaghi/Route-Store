@@ -19,6 +19,32 @@ class SingleAddress extends StatelessWidget {
   final AdressEntity adress;
   final VoidCallback onTap;
 
+  Future<void> _confirmDelete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Address'),
+        content: Text(
+            'Are you sure you want to delete "${adress.adressName}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      context
+          .read<AdressesBloc>()
+          .add(RemoveAdress(addressId: adress.adressID));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdressesBloc, AdressesStates>(
@@ -45,7 +71,7 @@ class SingleAddress extends StatelessWidget {
               children: [
                 Positioned(
                   top: 0,
-                  right: 5.w,
+                  right: 48.w,
                   child: Icon(
                     selectedAddress ? Iconsax.tick_circle5 : null,
                     color: selectedAddress
@@ -53,6 +79,14 @@ class SingleAddress extends StatelessWidget {
                             ? AppColors.light
                             : AppColors.dark
                         : null,
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    onPressed: () => _confirmDelete(context),
+                    icon: const Icon(Iconsax.trash, color: AppColors.error),
                   ),
                 ),
                 Column(

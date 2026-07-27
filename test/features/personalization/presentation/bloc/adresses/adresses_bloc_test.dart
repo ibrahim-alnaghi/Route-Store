@@ -9,6 +9,7 @@ import 'package:route_store/core/local_storage/cache_helper.dart';
 import 'package:route_store/features/personalization/domain/entities/adress_entity.dart';
 import 'package:route_store/features/personalization/domain/usecases/add_adress_use_case.dart';
 import 'package:route_store/features/personalization/domain/usecases/get_adresses_use_case.dart';
+import 'package:route_store/features/personalization/domain/usecases/remove_adress_use_case.dart';
 import 'package:route_store/features/personalization/presentation/bloc/adresses/adresses_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,20 +17,25 @@ class MockGetAdressesUseCase extends Mock implements GetAdressesUseCase {}
 
 class MockAddAdressUseCase extends Mock implements AddAdressUseCase {}
 
+class MockRemoveAdressUseCase extends Mock implements RemoveAdressUseCase {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late MockGetAdressesUseCase mockGetAdressesUseCase;
   late MockAddAdressUseCase mockAddAdressUseCase;
+  late MockRemoveAdressUseCase mockRemoveAdressUseCase;
 
   AdressesBloc buildBloc() => AdressesBloc(
         getAdressesUseCase: mockGetAdressesUseCase,
         addAdressUseCase: mockAddAdressUseCase,
+        removeAdressUseCase: mockRemoveAdressUseCase,
       );
 
   setUp(() {
     mockGetAdressesUseCase = MockGetAdressesUseCase();
     mockAddAdressUseCase = MockAddAdressUseCase();
+    mockRemoveAdressUseCase = MockRemoveAdressUseCase();
   });
 
   const fakeAddress = AdressEntity(
@@ -134,5 +140,98 @@ void main() {
       expect(bloc.state.selectedAddress, equals('addr-1'));
       await bloc.close();
     });
+  });
+
+  group('AdressesBloc - RemoveAdress', () {
+    blocTest<AdressesBloc, AdressesStates>(
+      'leaves selectedAddress unchanged and re-fetches addresses when deleting a NON-selected address succeeds',
+      setUp: () async {
+        // 'addr-1' is the currently-selected address in the cache.
+        SharedPreferences.setMockInitialValues({adressIDKey: 'addr-1'});
+        await CacheHelper.init();
+      },
+      build: () {
+        when(() => mockRemoveAdressUseCase.call(any()))
+            .thenAnswer((_) async => const Right(null));
+        when(() => mockGetAdressesUseCase.call())
+            .thenAnswer((_) async => const Right([fakeAddress]));
+        return buildBloc();
+      },
+      // Deleting a different address ('addr-2') than the selected one.
+      act: (bloc) => bloc.add(const RemoveAdress(addressId: 'addr-2')),
+      // Note: the intermediate loading emit inside the nested _getAdresses
+      // call is equal (by Equatable) to the first loading emit, so Bloc
+      // skips re-emitting it — only the distinct states show up here.
+      expect: () => [
+        const AdressesStates(
+            status: RequestStates.loading, selectedAddress: 'addr-1'),
+        const AdressesStates(
+            status: RequestStates.success,
+            selectedAddress: 'addr-1',
+            adresses: [fakeAddress]),
+      ],
+      verify: (_) {
+        verify(() => mockRemoveAdressUseCase.call('addr-2')).called(1);
+        verify(() => mockGetAdressesUseCase.call()).called(1);
+      },
+    );
+
+    blocTest<AdressesBloc, AdressesStates>(
+      'clears selectedAddress to empty when deleting the CURRENTLY-selected address succeeds',
+      setUp: () async {
+        // 'addr-1' is the currently-selected address in the cache, and is
+        // also the one being deleted.
+        SharedPreferences.setMockInitialValues({adressIDKey: 'addr-1'});
+        await CacheHelper.init();
+      },
+      build: () {
+        when(() => mockRemoveAdressUseCase.call(any()))
+            .thenAnswer((_) async => const Right(null));
+        when(() => mockGetAdressesUseCase.call())
+            .thenAnswer((_) async => const Right([]));
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const RemoveAdress(addressId: 'addr-1')),
+      // Note: the intermediate loading emit inside the nested _getAdresses
+      // call is equal (by Equatable) to the first loading emit, so Bloc
+      // skips re-emitting it — only the distinct states show up here.
+      expect: () => [
+        const AdressesStates(
+            status: RequestStates.loading, selectedAddress: 'addr-1'),
+        const AdressesStates(
+            status: RequestStates.success,
+            selectedAddress: '',
+            adresses: []),
+      ],
+      verify: (bloc) {
+        expect(bloc.state.selectedAddress, equals(''));
+        verify(() => mockGetAdressesUseCase.call()).called(1);
+      },
+    );
+
+    blocTest<AdressesBloc, AdressesStates>(
+      'emits [loading, failure] and does NOT re-fetch addresses when removing the address fails',
+      setUp: () async {
+        SharedPreferences.setMockInitialValues({});
+        await CacheHelper.init();
+      },
+      build: () {
+        when(() => mockRemoveAdressUseCase.call(any()))
+            .thenAnswer((_) async => Left(fakeFailure));
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const RemoveAdress(addressId: 'addr-1')),
+      expect: () => [
+        const AdressesStates(
+            status: RequestStates.loading, selectedAddress: ''),
+        AdressesStates(
+            status: RequestStates.failure,
+            selectedAddress: '',
+            errorMessage: fakeFailure.message),
+      ],
+      verify: (_) {
+        verifyNever(() => mockGetAdressesUseCase.call());
+      },
+    );
   });
 }

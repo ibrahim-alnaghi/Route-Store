@@ -6,4 +6,5 @@ import '../entities/adress_entity.dart';
 abstract class PersonalizationDomainRepo {
   Future<Either<Failures, List<AdressEntity>>> getAdresses();
   Future<Either<Failures, void>> addAdress(AddAdressRequestBody body);
+  Future<Either<Failures, void>> removeAdress(String addressId);
 }
