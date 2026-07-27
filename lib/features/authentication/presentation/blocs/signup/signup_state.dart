@@ -35,6 +35,12 @@ class SignupStates extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [status, errorMessage, agreedToTerms, showPassword, showConfirmPassword];
+  List<Object?> get props => [
+        status,
+        errorMessage,
+        agreedToTerms,
+        showPassword,
+        showConfirmPassword,
+        user,
+      ];
 }
