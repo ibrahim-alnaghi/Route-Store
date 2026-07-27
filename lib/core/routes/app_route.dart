@@ -28,6 +28,8 @@ import '../../features/shop/domain/entities/product_entity/product_entity.dart';
 import '../../features/shop/presentation/blocs/shop/shop_bloc.dart';
 import '../../features/shop/presentation/pages/navigation_menu.dart';
 import '../../features/personalization/presentation/pages/profile.dart';
+import '../../features/search/presentation/blocs/search/search_bloc.dart';
+import '../../features/search/presentation/pages/search_page.dart';
 import '../di/injection_container.dart';
 import '../widgets/success_screen/success_screen.dart';
 import 'routes.dart';
@@ -168,6 +170,13 @@ class AppRoutes {
       case Routes.orderScreen:
         return MaterialPageRoute(
           builder: (context) => const OrderScreen(),
+        );
+      case Routes.search:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => SearchBloc(searchProductsUseCase: getIt()),
+            child: const SearchPage(),
+          ),
         );
 
       default:
