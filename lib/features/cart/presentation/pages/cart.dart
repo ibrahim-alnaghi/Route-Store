@@ -51,7 +51,7 @@ class CartScreen extends StatelessWidget {
             horizontal: AppSizes.defaultSpace.w),
         child: BlocBuilder<CartBloc, CartStates>(
           builder: (context, state) {
-            if (state.status == RequestStates.loading) {
+            if (state.status == RequestStates.loading && state.cart == null) {
               return const Center(
                   child: CircularProgressIndicator(
                 color: AppColors.primary,

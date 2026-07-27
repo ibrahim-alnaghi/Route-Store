@@ -1,8 +1,18 @@
 part of 'checkout_bloc.dart';
 
-abstract class CheckoutEvent extends Equatable {
+sealed class CheckoutEvent extends Equatable {
   const CheckoutEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
+}
+
+class PlaceOrder extends CheckoutEvent {
+  final String cartId;
+  final AdressEntity shippingAddress;
+
+  const PlaceOrder({required this.cartId, required this.shippingAddress});
+
+  @override
+  List<Object?> get props => [cartId, shippingAddress];
 }

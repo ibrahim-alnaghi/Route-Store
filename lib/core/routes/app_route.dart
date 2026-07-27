@@ -142,8 +142,16 @@ class AppRoutes {
       case Routes.checkoutScreen:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => CheckoutBloc(),
-            child: const CheckoutScreen(),
+            create: (context) => CheckoutBloc(placeOrderUseCase: getIt()),
+            child: BlocProvider.value(
+              value: getIt<CartBloc>()..add(GetCart()),
+              child: BlocProvider(
+                create: (context) => AdressesBloc(
+                    getAdressesUseCase: getIt(), addAdressUseCase: getIt())
+                  ..add(GetAdresses()),
+                child: const CheckoutScreen(),
+              ),
+            ),
           ),
         );
       case Routes.userProfileScreen:

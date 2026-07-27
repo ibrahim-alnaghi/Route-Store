@@ -35,4 +35,17 @@ class CartDataRepo implements CartDomainRepo {
       return Left(ServerFailures(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, CartModel>> applyCoupon(String couponCode) async {
+    try {
+      CartModel cart = await cartDataSource.applyCoupon(couponCode);
+      return Right(cart);
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
 }
