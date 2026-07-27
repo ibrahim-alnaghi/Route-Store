@@ -29,8 +29,9 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(
                   height: AppSizes.spaceBtwItems.h,
                 ),
-                const SearchContainer(
+                SearchContainer(
                   text: 'Search in Store',
+                  onTap: () => context.pushNamed(Routes.search),
                 ),
                 SizedBox(
                   height: AppSizes.spaceBtwSections.h,

@@ -52,6 +52,16 @@ import '../../features/personalization/domain/usecases/add_adress_use_case.dart'
     as _i30;
 import '../../features/personalization/domain/usecases/get_adresses_use_case.dart'
     as _i33;
+import '../../features/search/data/datasources/remote/search_remote_data.dart'
+    as _i41;
+import '../../features/search/data/datasources/search_data_source.dart'
+    as _i40;
+import '../../features/search/data/repositories/search_data_repo.dart'
+    as _i43;
+import '../../features/search/domain/repositories/search_domain_repo.dart'
+    as _i42;
+import '../../features/search/domain/usecases/search_products_use_case.dart'
+    as _i44;
 import '../../features/shop/data/datasources/remote/shop_remote_data.dart'
     as _i25;
 import '../../features/shop/data/datasources/shop_data_source.dart' as _i24;
@@ -133,6 +143,12 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i37.GetProductsUseCase(gh<_i26.ShopDomainRepo>()));
     gh.lazySingleton<_i38.RemoveFromFavUseCase>(
         () => _i38.RemoveFromFavUseCase(gh<_i26.ShopDomainRepo>()));
+    gh.lazySingleton<_i40.SearchDataSource>(
+        () => _i41.SearchRemoteData(gh<_i7.ApiService>()));
+    gh.lazySingleton<_i42.SearchDomainRepo>(
+        () => _i43.SearchDataRepo(gh<_i40.SearchDataSource>()));
+    gh.lazySingleton<_i44.SearchProductsUseCase>(
+        () => _i44.SearchProductsUseCase(gh<_i42.SearchDomainRepo>()));
     return this;
   }
 }
