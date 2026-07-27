@@ -12,4 +12,5 @@ class EndPoints {
   static const String cart = "/api/v2/cart";
   static const String applyCoupon = "/api/v2/cart/applyCoupon";
   static const String orders = "/api/v2/orders";
+  static const String myOrders = "/api/v1/orders/user";
 }

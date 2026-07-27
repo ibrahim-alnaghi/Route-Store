@@ -54,6 +54,15 @@ import '../../features/checkout/domain/repositories/checkout_domain_repo.dart'
     as _i925;
 import '../../features/checkout/domain/usecases/place_order_use_case.dart'
     as _i838;
+import '../../features/orders/data/datasources/orders_data_source.dart'
+    as _i585;
+import '../../features/orders/data/datasources/remote/orders_remote_data.dart'
+    as _i580;
+import '../../features/orders/data/repositories/orders_data_repo.dart' as _i652;
+import '../../features/orders/domain/repositories/orders_domain_repo.dart'
+    as _i262;
+import '../../features/orders/domain/usecases/get_my_orders_use_case.dart'
+    as _i313;
 import '../../features/personalization/data/datasources/personalization_data_source.dart'
     as _i383;
 import '../../features/personalization/data/datasources/remote/personalization_remote_data.dart'
@@ -114,6 +123,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i299.ApiService>(() => _i299.ApiService(gh<_i361.Dio>()));
     gh.lazySingleton<_i545.SearchDataSource>(
         () => _i697.SearchRemoteData(gh<_i299.ApiService>()));
+    gh.lazySingleton<_i585.OrdersDataSource>(
+        () => _i580.OrdersRemoteData(gh<_i299.ApiService>()));
     gh.lazySingleton<_i495.CheckoutDataSource>(
         () => _i292.CheckoutRemoteData(gh<_i299.ApiService>()));
     gh.lazySingleton<_i383.PersonalizationDataSource>(
@@ -131,10 +142,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i610.SearchDataRepo(gh<_i545.SearchDataSource>()));
     gh.lazySingleton<_i101.PersonalizationDomainRepo>(() =>
         _i391.PersonalizationDataRepo(gh<_i383.PersonalizationDataSource>()));
+    gh.lazySingleton<_i262.OrdersDomainRepo>(
+        () => _i652.OrdersDataRepo(gh<_i585.OrdersDataSource>()));
     gh.lazySingleton<_i851.AuthenticationDomainRepo>(() =>
         _i360.AuthenticationDataRepo(gh<_i749.AuthenticationDataSources>()));
     gh.lazySingleton<_i925.CheckoutDomainRepo>(
         () => _i593.CheckoutDataRepo(gh<_i495.CheckoutDataSource>()));
+    gh.lazySingleton<_i313.GetMyOrdersUseCase>(
+        () => _i313.GetMyOrdersUseCase(gh<_i262.OrdersDomainRepo>()));
     gh.lazySingleton<_i932.AddAdressUseCase>(
         () => _i932.AddAdressUseCase(gh<_i101.PersonalizationDomainRepo>()));
     gh.lazySingleton<_i1013.GetAdressesUseCase>(

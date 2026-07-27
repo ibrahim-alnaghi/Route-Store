@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 
-import '../../../../../core/constants/colors.dart';
-import '../../../../../core/constants/sizes.dart';
-import '../../../../../core/helpers/helper_functions.dart';
-import '../../../../../core/widgets/containers/rounded_container.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/sizes.dart';
+import '../../../../core/helpers/extensions.dart';
+import '../../../../core/helpers/helper_functions.dart';
+import '../../../../core/routes/routes.dart';
+import '../../../../core/widgets/containers/rounded_container.dart';
+import '../../../checkout/domain/entities/order_entity.dart';
+import 'order_status_display.dart';
 
 class OrderItem extends StatelessWidget {
   const OrderItem({
     super.key,
+    required this.order,
   });
+
+  final OrderEntity order;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +48,17 @@ class OrderItem extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                     Text(
-                      '14 Feb, 2024',
+                      DateFormat('d MMM, yyyy')
+                          .format(order.createdAt ?? DateTime.now()),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ],
                 ),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () => context.pushNamed(
+                      Routes.orderDetailsScreen,
+                      arguments: order),
                   icon: const Icon(
                     Iconsax.arrow_right_34,
                     size: AppSizes.iconSm,
@@ -76,7 +87,9 @@ class OrderItem extends StatelessWidget {
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                           Text(
-                            '[#10536]',
+                            '[#${order.displayNumber}]',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
@@ -102,12 +115,13 @@ class OrderItem extends StatelessWidget {
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                           Text(
-                            'Delivered',
+                            order.status.label,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
                                 .apply(
-                                    color: AppColors.primary, fontSizeDelta: 1),
+                                    color: order.status.color,
+                                    fontSizeDelta: 1),
                           ),
                         ],
                       ),
