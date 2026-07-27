@@ -10,6 +10,7 @@ import '../../../../core/constants/sizes.dart';
 import '../../../../core/helpers/extensions.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../core/widgets/app_bar/custom_app_bar.dart';
+import '../../../../core/widgets/icons/circular_icon.dart';
 import '../widgets/cart_items.dart';
 
 class CartScreen extends StatelessWidget {
@@ -53,9 +54,9 @@ class CartScreen extends StatelessWidget {
             builder: (context, state) {
               if (state.cart != null &&
                   state.cart!.cartItems.cartProducts.isNotEmpty) {
-                return IconButton(
+                return CircularIcon(
+                  icon: Iconsax.trash,
                   onPressed: () => _confirmClearCart(context),
-                  icon: const Icon(Iconsax.trash, color: AppColors.error),
                 );
               }
               return const SizedBox.shrink();
