@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 class ApiService {
   final Dio _dio;
 
-  final _baseUrl = "https://route-ecommerce.onrender.com";
+  final _baseUrl = "https://ecommerce.routemisr.com";
 
   ApiService(this._dio);
 
