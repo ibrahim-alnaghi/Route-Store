@@ -4,4 +4,7 @@ abstract class CartDataSource {
   Future<CartModel> getCart();
   Future<void> addProductToCart(String productId);
   Future<CartModel> applyCoupon(String couponCode);
+  Future<void> updateCartProductQuantity(String productId, num quantity);
+  Future<void> removeCartItem(String productId);
+  Future<void> clearCart();
 }

@@ -42,4 +42,29 @@ class PersonalizationRemoteData implements CartDataSource {
     );
     return CartModel.fromJson(data);
   }
+
+  @override
+  Future<void> updateCartProductQuantity(String productId, num quantity) async {
+    await apiService.put(
+      endPoint: '${EndPoints.cart}/$productId',
+      data: {'count': quantity},
+      headers: {"token": getIt<UserEntity>().userToken},
+    );
+  }
+
+  @override
+  Future<void> removeCartItem(String productId) async {
+    await apiService.delete(
+      endPoint: '${EndPoints.cart}/$productId',
+      headers: {"token": getIt<UserEntity>().userToken},
+    );
+  }
+
+  @override
+  Future<void> clearCart() async {
+    await apiService.delete(
+      endPoint: EndPoints.cart,
+      headers: {"token": getIt<UserEntity>().userToken},
+    );
+  }
 }

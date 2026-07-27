@@ -6,6 +6,7 @@ import '../../../../../core/constants/colors.dart';
 import '../../../../../core/constants/sizes.dart';
 import '../../../../../core/helpers/helper_functions.dart';
 import '../../../../../core/widgets/containers/rounded_container.dart';
+import '../../../../../core/widgets/icons/circular_icon.dart';
 import '../../../domain/entities/adress_entity.dart';
 import '../../bloc/adresses/adresses_bloc.dart';
 
@@ -24,8 +25,8 @@ class SingleAddress extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Address'),
-        content: Text(
-            'Are you sure you want to delete "${adress.adressName}"?'),
+        content:
+            Text('Are you sure you want to delete "${adress.adressName}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -84,9 +85,9 @@ class SingleAddress extends StatelessWidget {
                 Positioned(
                   top: 0,
                   right: 0,
-                  child: IconButton(
+                  child: CircularIcon(
+                    icon: Iconsax.trash,
                     onPressed: () => _confirmDelete(context),
-                    icon: const Icon(Iconsax.trash, color: AppColors.error),
                   ),
                 ),
                 Column(

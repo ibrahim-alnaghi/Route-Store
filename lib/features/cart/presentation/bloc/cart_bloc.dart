@@ -5,7 +5,10 @@ import 'package:route_store/features/cart/domain/entities/cart_entity/cart_entit
 import 'package:route_store/features/cart/domain/entities/cart_entity/cart_products_entity.dart';
 import 'package:route_store/features/cart/domain/usecases/add_product_to_cart_use_case.dart';
 import 'package:route_store/features/cart/domain/usecases/apply_coupon_use_case.dart';
+import 'package:route_store/features/cart/domain/usecases/clear_cart_use_case.dart';
 import 'package:route_store/features/cart/domain/usecases/get_cart_use_case.dart';
+import 'package:route_store/features/cart/domain/usecases/remove_cart_item_use_case.dart';
+import 'package:route_store/features/cart/domain/usecases/update_cart_product_quantity_use_case.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -14,13 +17,23 @@ class CartBloc extends Bloc<CartEvent, CartStates> {
   final GetCartUseCase _getCartUseCase;
   final AddProductToCart _addProductToCart;
   final ApplyCouponUseCase _applyCouponUseCase;
+  final RemoveCartItemUseCase _removeCartItemUseCase;
+  final UpdateCartProductQuantityUseCase _updateCartProductQuantityUseCase;
+  final ClearCartUseCase _clearCartUseCase;
   CartBloc(
       {required GetCartUseCase getCartUseCase,
       required AddProductToCart addProductToCart,
-      required ApplyCouponUseCase applyCouponUseCase})
+      required ApplyCouponUseCase applyCouponUseCase,
+      required RemoveCartItemUseCase removeCartItemUseCase,
+      required UpdateCartProductQuantityUseCase
+          updateCartProductQuantityUseCase,
+      required ClearCartUseCase clearCartUseCase})
       : _getCartUseCase = getCartUseCase,
         _addProductToCart = addProductToCart,
         _applyCouponUseCase = applyCouponUseCase,
+        _removeCartItemUseCase = removeCartItemUseCase,
+        _updateCartProductQuantityUseCase = updateCartProductQuantityUseCase,
+        _clearCartUseCase = clearCartUseCase,
         super(const CartStates(status: RequestStates.initial)) {
     on<GetCart>((event, emit) async {
       await _getCart(emit);
@@ -118,54 +131,62 @@ class CartBloc extends Bloc<CartEvent, CartStates> {
 
   Future<void> _updateCartProductQuantity(
       String productId, num quantity, Emitter<CartStates> emit) async {
-    // Emit a loading state
+    if (quantity < 1) {
+      await _removeCartItem(productId, emit);
+      return;
+    }
+
     emit(state.copyWith(status: RequestStates.loading));
 
-    final cart = state.cart;
-    // Check if the cart is not null
-    if (cart != null) {
-      final cartItems = cart.cartItems;
-      final cartProducts = cartItems.cartProducts;
-      // Check if the product is already in the cart
-      CartProductsEntity? existingProduct;
-      try {
-        existingProduct = cartProducts.firstWhere(
-          (product) => product.productDetails.productId == productId,
-        );
-      } catch (e) {
-        existingProduct = null;
-      }
+    final result = await _updateCartProductQuantityUseCase.call(
+      UpdateCartQuantityParams(productId: productId, quantity: quantity),
+    );
 
-      // If the product exists in the cart, update its quantity
-      if (existingProduct != null) {
-        // Update the quantity of the product in the cart
-        if (existingProduct.itemCount < 1) {
-          // If the updated quantity is less than 1, remove the product from the cart
-          add(RemoveCartItem(productId));
-          if (cartProducts.isEmpty) {
-            add(ClearCart());
-          }
-        }
-      } else {
-        // If the product is not in the cart, add it
-        add(AddToCart(productId));
-      }
-    } else {
-      // If the cart is empty, add the product to the cart
-      add(AddToCart(productId));
-    }
+    await result.fold(
+      (l) async {
+        emit(state.copyWith(
+            status: RequestStates.failure, errorMessage: l.message));
+      },
+      (r) async {
+        await _getCart(emit);
+      },
+    );
   }
 
   Future<void> _removeCartItem(
       String productId, Emitter<CartStates> emit) async {
-    // Add your logic to remove the specific item from the cart here
-  }
-  Future<void> _clearCart(Emitter<CartStates> emit) async {
-    // Add your logic to clear the cart here
+    emit(state.copyWith(status: RequestStates.loading));
+
+    final result = await _removeCartItemUseCase.call(productId);
+
+    await result.fold(
+      (l) async {
+        emit(state.copyWith(
+            status: RequestStates.failure, errorMessage: l.message));
+      },
+      (r) async {
+        await _getCart(emit);
+      },
+    );
   }
 
-  Future<void> _applyCoupon(
-      String couponCode, Emitter<CartStates> emit) async {
+  Future<void> _clearCart(Emitter<CartStates> emit) async {
+    emit(state.copyWith(status: RequestStates.loading));
+
+    final result = await _clearCartUseCase.call();
+
+    await result.fold(
+      (l) async {
+        emit(state.copyWith(
+            status: RequestStates.failure, errorMessage: l.message));
+      },
+      (r) async {
+        await _getCart(emit);
+      },
+    );
+  }
+
+  Future<void> _applyCoupon(String couponCode, Emitter<CartStates> emit) async {
     final previousTotal = state.cart?.cartItems.totalPrice ?? 0;
     // Bumped on every attempt's outcome (success or failure) so a
     // BlocListener can reliably fire even when two attempts in a row

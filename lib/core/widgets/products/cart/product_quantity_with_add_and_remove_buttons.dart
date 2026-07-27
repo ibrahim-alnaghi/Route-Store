@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:route_store/features/cart/domain/entities/cart_entity/cart_products_entity.dart';
+import 'package:route_store/features/cart/presentation/bloc/cart_bloc.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/sizes.dart';
@@ -30,6 +32,10 @@ class ProductQuantityWithAddAndRemoveButtons extends StatelessWidget {
           backgroundColor: HelperFunctions.isDarkMode(context)
               ? AppColors.darkGrey
               : AppColors.light,
+          onPressed: () => context.read<CartBloc>().add(
+              UpdateCartProductQuantity(
+                  cartProductsEntity.productDetails.productId,
+                  cartProductsEntity.itemCount - 1)),
         ),
         SizedBox(
           width: AppSizes.spaceBtwItems.w,
@@ -48,6 +54,10 @@ class ProductQuantityWithAddAndRemoveButtons extends StatelessWidget {
           size: AppSizes.md.w,
           color: AppColors.white,
           backgroundColor: AppColors.primary,
+          onPressed: () => context.read<CartBloc>().add(
+              UpdateCartProductQuantity(
+                  cartProductsEntity.productDetails.productId,
+                  cartProductsEntity.itemCount + 1)),
         ),
       ],
     );

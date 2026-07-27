@@ -56,5 +56,8 @@ abstract class RegisterModule {
   CartBloc get cartBloc => CartBloc(
       getCartUseCase: getIt(),
       addProductToCart: getIt(),
-      applyCouponUseCase: getIt());
+      applyCouponUseCase: getIt(),
+      removeCartItemUseCase: getIt(),
+      updateCartProductQuantityUseCase: getIt(),
+      clearCartUseCase: getIt());
 }

@@ -42,7 +42,12 @@ import '../../features/cart/domain/usecases/add_product_to_cart_use_case.dart'
     as _i802;
 import '../../features/cart/domain/usecases/apply_coupon_use_case.dart'
     as _i780;
+import '../../features/cart/domain/usecases/clear_cart_use_case.dart' as _i989;
 import '../../features/cart/domain/usecases/get_cart_use_case.dart' as _i488;
+import '../../features/cart/domain/usecases/remove_cart_item_use_case.dart'
+    as _i650;
+import '../../features/cart/domain/usecases/update_cart_product_quantity_use_case.dart'
+    as _i239;
 import '../../features/cart/presentation/bloc/cart_bloc.dart' as _i517;
 import '../../features/checkout/data/datasources/checkout_data_source.dart'
     as _i495;
@@ -188,8 +193,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i802.AddProductToCart(gh<_i636.CartDomainRepo>()));
     gh.lazySingleton<_i780.ApplyCouponUseCase>(
         () => _i780.ApplyCouponUseCase(gh<_i636.CartDomainRepo>()));
+    gh.lazySingleton<_i989.ClearCartUseCase>(
+        () => _i989.ClearCartUseCase(gh<_i636.CartDomainRepo>()));
     gh.lazySingleton<_i488.GetCartUseCase>(
         () => _i488.GetCartUseCase(gh<_i636.CartDomainRepo>()));
+    gh.lazySingleton<_i650.RemoveCartItemUseCase>(
+        () => _i650.RemoveCartItemUseCase(gh<_i636.CartDomainRepo>()));
+    gh.lazySingleton<_i239.UpdateCartProductQuantityUseCase>(() =>
+        _i239.UpdateCartProductQuantityUseCase(gh<_i636.CartDomainRepo>()));
     gh.lazySingleton<_i838.PlaceOrderUseCase>(
         () => _i838.PlaceOrderUseCase(gh<_i925.CheckoutDomainRepo>()));
     return this;
