@@ -6,4 +6,8 @@ abstract class CartDomainRepo {
   Future<Either<Failures, CartEntity>> getCart();
   Future<Either<Failures, void>> addProductToCart(String productId);
   Future<Either<Failures, CartEntity>> applyCoupon(String couponCode);
+  Future<Either<Failures, void>> updateCartProductQuantity(
+      String productId, num quantity);
+  Future<Either<Failures, void>> removeCartItem(String productId);
+  Future<Either<Failures, void>> clearCart();
 }

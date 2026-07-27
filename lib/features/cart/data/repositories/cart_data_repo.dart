@@ -48,4 +48,42 @@ class CartDataRepo implements CartDomainRepo {
       return Left(ServerFailures(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, void>> updateCartProductQuantity(
+      String productId, num quantity) async {
+    try {
+      return Right(
+          await cartDataSource.updateCartProductQuantity(productId, quantity));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failures, void>> removeCartItem(String productId) async {
+    try {
+      return Right(await cartDataSource.removeCartItem(productId));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failures, void>> clearCart() async {
+    try {
+      return Right(await cartDataSource.clearCart());
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
 }

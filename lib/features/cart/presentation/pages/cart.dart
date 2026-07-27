@@ -49,7 +49,13 @@ class CartScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(
             vertical: AppSizes.defaultSpace.h,
             horizontal: AppSizes.defaultSpace.w),
-        child: BlocBuilder<CartBloc, CartStates>(
+        child: BlocConsumer<CartBloc, CartStates>(
+          listenWhen: (previous, current) =>
+              previous.status != current.status &&
+              current.status == RequestStates.failure,
+          listener: (context, state) => context.showCustomSnackBar(
+              type: SnackBarType.error,
+              message: state.errorMessage ?? 'Something went wrong'),
           builder: (context, state) {
             if (state.status == RequestStates.loading && state.cart == null) {
               return const Center(

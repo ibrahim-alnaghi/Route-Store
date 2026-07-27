@@ -182,4 +182,155 @@ void main() {
       );
     });
   });
+
+  group('CartDataRepo.updateCartProductQuantity', () {
+    test('should return Right(void) when the data source call succeeds',
+        () async {
+      when(() => mockDataSource.updateCartProductQuantity(any(), any()))
+          .thenAnswer((_) async {});
+
+      final result = await sut.updateCartProductQuantity('product1', 3);
+
+      expect(result, isA<Right>());
+      verify(() => mockDataSource.updateCartProductQuantity('product1', 3))
+          .called(1);
+    });
+
+    test(
+        'should return Left(ServerFailures) with generic message when data source throws Exception',
+        () async {
+      when(() => mockDataSource.updateCartProductQuantity(any(), any()))
+          .thenThrow(Exception('unexpected'));
+
+      final result = await sut.updateCartProductQuantity('product1', 3);
+
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, contains('Exception: unexpected'));
+        },
+        (_) => fail('expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with connection message when data source throws DioException(connectionError)',
+        () async {
+      when(() => mockDataSource.updateCartProductQuantity(any(), any()))
+          .thenThrow(buildDioException(DioExceptionType.connectionError));
+
+      final result = await sut.updateCartProductQuantity('product1', 3);
+
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('No Internet Connection'));
+        },
+        (_) => fail('expected Left'),
+      );
+    });
+  });
+
+  group('CartDataRepo.removeCartItem', () {
+    test('should return Right(void) when the data source call succeeds',
+        () async {
+      when(() => mockDataSource.removeCartItem(any()))
+          .thenAnswer((_) async {});
+
+      final result = await sut.removeCartItem('product1');
+
+      expect(result, isA<Right>());
+      verify(() => mockDataSource.removeCartItem('product1')).called(1);
+    });
+
+    test(
+        'should return Left(ServerFailures) with generic message when data source throws Exception',
+        () async {
+      when(() => mockDataSource.removeCartItem(any()))
+          .thenThrow(Exception('unexpected'));
+
+      final result = await sut.removeCartItem('product1');
+
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, contains('Exception: unexpected'));
+        },
+        (_) => fail('expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with timeout message when data source throws DioException(connectionTimeout)',
+        () async {
+      when(() => mockDataSource.removeCartItem(any()))
+          .thenThrow(buildDioException(DioExceptionType.connectionTimeout));
+
+      final result = await sut.removeCartItem('product1');
+
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('Connection timeout with api server'));
+        },
+        (_) => fail('expected Left'),
+      );
+    });
+  });
+
+  group('CartDataRepo.clearCart', () {
+    test('should return Right(void) when the data source call succeeds',
+        () async {
+      when(() => mockDataSource.clearCart()).thenAnswer((_) async {});
+
+      final result = await sut.clearCart();
+
+      expect(result, isA<Right>());
+      verify(() => mockDataSource.clearCart()).called(1);
+    });
+
+    test(
+        'should return Left(ServerFailures) with generic message when data source throws Exception',
+        () async {
+      when(() => mockDataSource.clearCart())
+          .thenThrow(Exception('unexpected'));
+
+      final result = await sut.clearCart();
+
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, contains('Exception: unexpected'));
+        },
+        (_) => fail('expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) mapped from the response body when data source throws DioException(badResponse) with a 404',
+        () async {
+      final response = Response(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: 404,
+      );
+      when(() => mockDataSource.clearCart()).thenThrow(
+          buildDioException(DioExceptionType.badResponse, response: response));
+
+      final result = await sut.clearCart();
+
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('Your request was not found'));
+        },
+        (_) => fail('expected Left'),
+      );
+    });
+  });
 }
