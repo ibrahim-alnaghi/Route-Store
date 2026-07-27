@@ -18,3 +18,11 @@ class SelectedAddress extends AdressesEvent {
   @override
   List<Object> get props => [selectedAddressID];
 }
+
+class RemoveAdress extends AdressesEvent {
+  final String addressId;
+
+  const RemoveAdress({required this.addressId});
+  @override
+  List<Object> get props => [addressId];
+}

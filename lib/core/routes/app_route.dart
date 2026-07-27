@@ -147,7 +147,9 @@ class AppRoutes {
               value: getIt<CartBloc>()..add(GetCart()),
               child: BlocProvider(
                 create: (context) => AdressesBloc(
-                    getAdressesUseCase: getIt(), addAdressUseCase: getIt())
+                    getAdressesUseCase: getIt(),
+                    addAdressUseCase: getIt(),
+                    removeAdressUseCase: getIt())
                   ..add(GetAdresses()),
                 child: const CheckoutScreen(),
               ),
@@ -162,7 +164,9 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => AdressesBloc(
-                getAdressesUseCase: getIt(), addAdressUseCase: getIt())
+                getAdressesUseCase: getIt(),
+                addAdressUseCase: getIt(),
+                removeAdressUseCase: getIt())
               ..add(GetAdresses()),
             child: const UserAddressScreen(),
           ),
@@ -171,7 +175,9 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => AdressesBloc(
-                getAdressesUseCase: getIt(), addAdressUseCase: getIt()),
+                getAdressesUseCase: getIt(),
+                addAdressUseCase: getIt(),
+                removeAdressUseCase: getIt()),
             child: const AddNewAddressScreen(),
           ),
         );

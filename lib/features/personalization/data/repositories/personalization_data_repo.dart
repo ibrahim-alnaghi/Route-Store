@@ -39,4 +39,16 @@ class PersonalizationDataRepo implements PersonalizationDomainRepo {
       return Left(ServerFailures(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, void>> removeAdress(String addressId) async {
+    try {
+      return Right(await personalizationDataSource.removeAdress(addressId));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
 }

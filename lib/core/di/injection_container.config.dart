@@ -66,6 +66,8 @@ import '../../features/personalization/domain/usecases/add_adress_use_case.dart'
     as _i932;
 import '../../features/personalization/domain/usecases/get_adresses_use_case.dart'
     as _i1013;
+import '../../features/personalization/domain/usecases/remove_adress_use_case.dart'
+    as _i695;
 import '../../features/search/data/datasources/remote/search_remote_data.dart'
     as _i697;
 import '../../features/search/data/datasources/search_data_source.dart'
@@ -139,6 +141,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i932.AddAdressUseCase(gh<_i101.PersonalizationDomainRepo>()));
     gh.lazySingleton<_i1013.GetAdressesUseCase>(
         () => _i1013.GetAdressesUseCase(gh<_i101.PersonalizationDomainRepo>()));
+    gh.lazySingleton<_i695.RemoveAdressUseCase>(
+        () => _i695.RemoveAdressUseCase(gh<_i101.PersonalizationDomainRepo>()));
     gh.lazySingleton<_i698.SearchProductsUseCase>(
         () => _i698.SearchProductsUseCase(gh<_i853.SearchDomainRepo>()));
     gh.lazySingleton<_i947.AddToFavUseCase>(

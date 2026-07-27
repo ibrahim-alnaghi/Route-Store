@@ -8,6 +8,7 @@ import '../../../data/models/add_adress_request_body.dart';
 import '../../../domain/entities/adress_entity.dart';
 import '../../../domain/usecases/add_adress_use_case.dart';
 import '../../../domain/usecases/get_adresses_use_case.dart';
+import '../../../domain/usecases/remove_adress_use_case.dart';
 
 part 'adresses_event.dart';
 part 'adresses_state.dart';
@@ -15,6 +16,7 @@ part 'adresses_state.dart';
 class AdressesBloc extends Bloc<AdressesEvent, AdressesStates> {
   final GetAdressesUseCase _getAdressesUseCase;
   final AddAdressUseCase _addAdressUseCase;
+  final RemoveAdressUseCase _removeAdressUseCase;
   final name = TextEditingController();
   final phone = TextEditingController();
   final street = TextEditingController();
@@ -24,9 +26,11 @@ class AdressesBloc extends Bloc<AdressesEvent, AdressesStates> {
   final formKey = GlobalKey<FormState>();
   AdressesBloc(
       {required GetAdressesUseCase getAdressesUseCase,
-      required AddAdressUseCase addAdressUseCase})
+      required AddAdressUseCase addAdressUseCase,
+      required RemoveAdressUseCase removeAdressUseCase})
       : _getAdressesUseCase = getAdressesUseCase,
         _addAdressUseCase = addAdressUseCase,
+        _removeAdressUseCase = removeAdressUseCase,
         super(AdressesStates(
             status: RequestStates.initial,
             selectedAddress: CacheHelper.getData(adressIDKey) ?? '')) {
@@ -38,6 +42,9 @@ class AdressesBloc extends Bloc<AdressesEvent, AdressesStates> {
     });
     on<AddAdress>((event, emit) async {
       await _addAdress(emit);
+    });
+    on<RemoveAdress>((event, emit) async {
+      await _removeAdress(event.addressId, emit);
     });
   }
 
@@ -79,6 +86,26 @@ class AdressesBloc extends Bloc<AdressesEvent, AdressesStates> {
       },
       (r) {
         emit(state.copyWith(status: RequestStates.success));
+      },
+    );
+  }
+
+  Future<void> _removeAdress(
+      String addressId, Emitter<AdressesStates> emit) async {
+    emit(state.copyWith(status: RequestStates.loading));
+
+    final result = await _removeAdressUseCase.call(addressId);
+
+    await result.fold(
+      (l) async {
+        emit(state.copyWith(
+            status: RequestStates.failure, errorMessage: l.message));
+      },
+      (r) async {
+        if (CacheHelper.getData(adressIDKey) == addressId) {
+          await CacheHelper.saveData(key: adressIDKey, value: '');
+        }
+        await _getAdresses(emit);
       },
     );
   }

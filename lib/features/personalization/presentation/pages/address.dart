@@ -40,7 +40,13 @@ class UserAddressScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: AppSizes.defaultSpace.w,
               vertical: AppSizes.defaultSpace.h),
-          child: BlocBuilder<AdressesBloc, AdressesStates>(
+          child: BlocConsumer<AdressesBloc, AdressesStates>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status &&
+                current.status == RequestStates.failure,
+            listener: (context, state) => context.showCustomSnackBar(
+                type: SnackBarType.error,
+                message: state.errorMessage ?? 'Something went wrong'),
             builder: (context, state) {
               if (state.status == RequestStates.loading ||
                   state.adresses == null) {

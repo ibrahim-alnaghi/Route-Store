@@ -41,4 +41,12 @@ class PersonalizationRemoteData implements PersonalizationDataSource {
       headers: {"token": getIt<UserEntity>().userToken},
     );
   }
+
+  @override
+  Future<void> removeAdress(String addressId) async {
+    await apiService.delete(
+      endPoint: '${EndPoints.addresses}/$addressId',
+      headers: {"token": getIt<UserEntity>().userToken},
+    );
+  }
 }
