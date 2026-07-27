@@ -53,5 +53,8 @@ abstract class RegisterModule {
       removeFromFavUseCase: getIt(),
       getFavUseCase: getIt());
   @lazySingleton
-  CartBloc get cartBloc => CartBloc(getCartUseCase: getIt(), addProductToCart: getIt());
+  CartBloc get cartBloc => CartBloc(
+      getCartUseCase: getIt(),
+      addProductToCart: getIt(),
+      applyCouponUseCase: getIt());
 }

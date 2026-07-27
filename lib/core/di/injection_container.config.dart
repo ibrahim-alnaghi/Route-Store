@@ -40,8 +40,20 @@ import '../../features/cart/data/repositories/cart_data_repo.dart' as _i451;
 import '../../features/cart/domain/repositories/cart_domain_repo.dart' as _i636;
 import '../../features/cart/domain/usecases/add_product_to_cart_use_case.dart'
     as _i802;
+import '../../features/cart/domain/usecases/apply_coupon_use_case.dart'
+    as _i780;
 import '../../features/cart/domain/usecases/get_cart_use_case.dart' as _i488;
 import '../../features/cart/presentation/bloc/cart_bloc.dart' as _i517;
+import '../../features/checkout/data/datasources/checkout_data_source.dart'
+    as _i495;
+import '../../features/checkout/data/datasources/remote/checkout_remote_data.dart'
+    as _i292;
+import '../../features/checkout/data/repositories/checkout_data_repo.dart'
+    as _i593;
+import '../../features/checkout/domain/repositories/checkout_domain_repo.dart'
+    as _i925;
+import '../../features/checkout/domain/usecases/place_order_use_case.dart'
+    as _i838;
 import '../../features/personalization/data/datasources/personalization_data_source.dart'
     as _i383;
 import '../../features/personalization/data/datasources/remote/personalization_remote_data.dart'
@@ -102,6 +114,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i299.ApiService>(() => _i299.ApiService(gh<_i361.Dio>()));
     gh.lazySingleton<_i545.SearchDataSource>(
         () => _i697.SearchRemoteData(gh<_i299.ApiService>()));
+    gh.lazySingleton<_i495.CheckoutDataSource>(
+        () => _i292.CheckoutRemoteData(gh<_i299.ApiService>()));
     gh.lazySingleton<_i383.PersonalizationDataSource>(
         () => _i19.PersonalizationRemoteData(gh<_i299.ApiService>()));
     gh.lazySingleton<_i481.ShopDataSource>(
@@ -119,6 +133,8 @@ extension GetItInjectableX on _i174.GetIt {
         _i391.PersonalizationDataRepo(gh<_i383.PersonalizationDataSource>()));
     gh.lazySingleton<_i851.AuthenticationDomainRepo>(() =>
         _i360.AuthenticationDataRepo(gh<_i749.AuthenticationDataSources>()));
+    gh.lazySingleton<_i925.CheckoutDomainRepo>(
+        () => _i593.CheckoutDataRepo(gh<_i495.CheckoutDataSource>()));
     gh.lazySingleton<_i932.AddAdressUseCase>(
         () => _i932.AddAdressUseCase(gh<_i101.PersonalizationDomainRepo>()));
     gh.lazySingleton<_i1013.GetAdressesUseCase>(
@@ -151,8 +167,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i451.CartDataRepo(gh<_i670.CartDataSource>()));
     gh.lazySingleton<_i802.AddProductToCart>(
         () => _i802.AddProductToCart(gh<_i636.CartDomainRepo>()));
+    gh.lazySingleton<_i780.ApplyCouponUseCase>(
+        () => _i780.ApplyCouponUseCase(gh<_i636.CartDomainRepo>()));
     gh.lazySingleton<_i488.GetCartUseCase>(
         () => _i488.GetCartUseCase(gh<_i636.CartDomainRepo>()));
+    gh.lazySingleton<_i838.PlaceOrderUseCase>(
+        () => _i838.PlaceOrderUseCase(gh<_i925.CheckoutDomainRepo>()));
     return this;
   }
 }

@@ -32,4 +32,14 @@ class PersonalizationRemoteData implements CartDataSource {
       headers: {"token": getIt<UserEntity>().userToken},
     );
   }
+
+  @override
+  Future<CartModel> applyCoupon(String couponCode) async {
+    final data = await apiService.put(
+      endPoint: EndPoints.applyCoupon,
+      data: {'couponName': couponCode},
+      headers: {"token": getIt<UserEntity>().userToken},
+    );
+    return CartModel.fromJson(data);
+  }
 }

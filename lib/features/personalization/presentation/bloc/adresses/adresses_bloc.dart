@@ -52,7 +52,10 @@ class AdressesBloc extends Bloc<AdressesEvent, AdressesStates> {
             status: RequestStates.failure, errorMessage: l.message));
       },
       (r) {
-        emit(state.copyWith(status: RequestStates.success, adresses: r));
+        emit(state.copyWith(
+            status: RequestStates.success,
+            adresses: r,
+            selectedAddress: CacheHelper.getData(adressIDKey) ?? ''));
       },
     );
   }

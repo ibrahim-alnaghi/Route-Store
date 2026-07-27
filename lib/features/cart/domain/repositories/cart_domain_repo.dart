@@ -5,4 +5,5 @@ import 'package:route_store/features/cart/domain/entities/cart_entity/cart_entit
 abstract class CartDomainRepo {
   Future<Either<Failures, CartEntity>> getCart();
   Future<Either<Failures, void>> addProductToCart(String productId);
+  Future<Either<Failures, CartEntity>> applyCoupon(String couponCode);
 }

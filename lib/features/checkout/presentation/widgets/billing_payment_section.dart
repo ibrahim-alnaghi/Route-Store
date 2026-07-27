@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/colors.dart';
-import '../../../../core/constants/image_strings.dart';
 import '../../../../core/constants/sizes.dart';
 import '../../../../core/helpers/helper_functions.dart';
 import '../../../../core/widgets/containers/rounded_container.dart';
@@ -15,11 +14,9 @@ class BillingPaymentSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SectionHeading(
+        const SectionHeading(
           title: 'Payment Method',
-          buttonTitle: 'Change',
-          showActionButton: true,
-          onPressed: () {},
+          showActionButton: false,
         ),
         SizedBox(
           height: AppSizes.spaceBtwItems / 2.h,
@@ -34,16 +31,13 @@ class BillingPaymentSection extends StatelessWidget {
               backgroundColor: HelperFunctions.isDarkMode(context)
                   ? AppColors.light
                   : AppColors.white,
-              child: const Image(
-                image: AssetImage(AppImages.paypal),
-                fit: BoxFit.contain,
-              ),
+              child: const Icon(Icons.money, color: AppColors.primary),
             ),
             SizedBox(
               width: AppSizes.spaceBtwItems / 2.w,
             ),
             Text(
-              'PayPal',
+              'Cash on Delivery',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
