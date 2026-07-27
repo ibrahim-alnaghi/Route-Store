@@ -6,9 +6,12 @@ import '../../features/cart/presentation/bloc/cart_bloc.dart';
 import '../../features/cart/presentation/pages/cart.dart';
 import '../../features/checkout/presentation/bloc/checkout_bloc.dart';
 import '../../features/checkout/presentation/pages/checkout.dart';
+import '../../features/checkout/domain/entities/order_entity.dart';
+import '../../features/orders/presentation/bloc/orders_bloc.dart';
+import '../../features/orders/presentation/pages/order_details.dart';
+import '../../features/orders/presentation/pages/orders.dart';
 import '../../features/personalization/presentation/pages/add_new_address.dart';
 import '../../features/personalization/presentation/pages/address.dart';
-import '../../features/personalization/presentation/pages/orders.dart';
 import '../../features/product_details/presentation/blocs/product_details/product_details_bloc.dart';
 import '../../features/product_details/presentation/pages/product_details.dart';
 import '../../features/product_details/presentation/pages/product_reviews.dart';
@@ -177,7 +180,16 @@ class AppRoutes {
         );
       case Routes.orderScreen:
         return MaterialPageRoute(
-          builder: (context) => const OrderScreen(),
+          builder: (context) => BlocProvider(
+            create: (context) => OrdersBloc(getMyOrdersUseCase: getIt())
+              ..add(const GetMyOrders()),
+            child: const OrderScreen(),
+          ),
+        );
+      case Routes.orderDetailsScreen:
+        return MaterialPageRoute(
+          builder: (context) =>
+              OrderDetailsScreen(order: arguments as OrderEntity),
         );
       case Routes.search:
         return MaterialPageRoute(

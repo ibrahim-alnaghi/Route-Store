@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/sizes.dart';
 
 class BillingAmountSection extends StatelessWidget {
   const BillingAmountSection({super.key, required this.totalPrice});
@@ -7,16 +11,29 @@ class BillingAmountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Order Total',
-          style: Theme.of(context).textTheme.bodyMedium,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Order Total',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            Text(
+              'EGP $totalPrice',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
         ),
+        SizedBox(height: AppSizes.sm / 2.h),
         Text(
-          'EGP $totalPrice',
-          style: Theme.of(context).textTheme.titleMedium,
+          'Tax & shipping calculated at checkout',
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: AppColors.grey),
         ),
       ],
     );
