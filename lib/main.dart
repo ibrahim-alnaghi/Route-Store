@@ -19,4 +19,5 @@ void main() async {
   ]).then((value) async => runApp(RouteStore(
         route: HelperFunctions.getRoute(),
       )));
+      
 }
