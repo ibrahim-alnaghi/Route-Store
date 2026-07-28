@@ -39,7 +39,7 @@ void main() {
     city: 'Cairo',
   );
 
-  final fakeOrder = OrderModel(
+  const fakeOrder = OrderModel(
     id: 'order1',
     cartIdValue: 'cart1',
     totalOrderPriceValue: 250,

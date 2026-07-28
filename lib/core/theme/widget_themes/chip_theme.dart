@@ -7,7 +7,7 @@ class ChipThemeStyle {
   ChipThemeStyle._();
 
   static ChipThemeData lightChipTheme = ChipThemeData(
-    disabledColor: AppColors.grey.withOpacity(0.4),
+    disabledColor: AppColors.grey.withValues(alpha: 0.4),
     labelStyle: const TextStyle(color: AppColors.black),
     selectedColor: AppColors.primary,
     padding: EdgeInsets.symmetric(horizontal: 12.0.w, vertical: 12.h),

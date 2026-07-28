@@ -58,7 +58,7 @@ class SingleAddress extends StatelessWidget {
             width: double.infinity,
             showBorder: true,
             backgroundColor: selectedAddress
-                ? AppColors.primary.withOpacity(0.5)
+                ? AppColors.primary.withValues(alpha: 0.5)
                 : Colors.transparent,
             borderColor: selectedAddress
                 ? Colors.transparent

@@ -90,9 +90,9 @@ class SettingsScreen extends StatelessWidget {
                         subTitle: 'Set Theme to Dark Mood',
                         trailing: Switch(
                           thumbColor:
-                              const MaterialStatePropertyAll(AppColors.white),
+                              const WidgetStatePropertyAll(AppColors.white),
                           inactiveTrackColor:
-                              AppColors.primary.withOpacity(0.5),
+                              AppColors.primary.withValues(alpha: 0.5),
                           activeTrackColor: AppColors.primary,
                           value: state.isDark,
                           onChanged: (value) {
@@ -113,7 +113,9 @@ class SettingsScreen extends StatelessWidget {
                         onPressed: () {
                           CacheHelper.removeData(userkey).then((value) {
                             if (value) {
-                              context.pushNamedAndRemoveUntil(Routes.login);
+                              if (context.mounted) {
+                                context.pushNamedAndRemoveUntil(Routes.login);
+                              }
                             }
                           });
                         },

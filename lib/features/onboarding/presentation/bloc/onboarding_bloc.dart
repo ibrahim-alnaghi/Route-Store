@@ -41,9 +41,11 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   void _navigateToLogin(BuildContext context) {
     CacheHelper.saveData(key: onBoardingKey, value: true).then((value) {
       if (value) {
-        context.pushNamedAndRemoveUntil(
-          Routes.login,
-        );
+        if (context.mounted) {
+          context.pushNamedAndRemoveUntil(
+            Routes.login,
+          );
+        }
       }
     });
   }

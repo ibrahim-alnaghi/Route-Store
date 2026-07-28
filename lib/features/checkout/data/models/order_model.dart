@@ -15,7 +15,7 @@ class OrderModel extends OrderEntity {
   final num? shippingPriceValue;
   final String? orderNumberValue;
 
-  OrderModel({
+  const OrderModel({
     this.id,
     this.cartIdValue,
     this.totalOrderPriceValue,
@@ -44,8 +44,9 @@ class OrderModel extends OrderEntity {
         );
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
-    final data =
-        json['data'] is Map<String, dynamic> ? json['data'] as Map<String, dynamic> : json;
+    final data = json['data'] is Map<String, dynamic>
+        ? json['data'] as Map<String, dynamic>
+        : json;
     return OrderModel(
       id: data['_id']?.toString(),
       cartIdValue: data['cartId']?.toString(),

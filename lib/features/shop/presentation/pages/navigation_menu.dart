@@ -30,8 +30,8 @@ class NavigationMenu extends StatelessWidget {
                   ? AppColors.black
                   : Colors.white,
               indicatorColor: HelperFunctions.isDarkMode(context)
-                  ? AppColors.white.withOpacity(0.1)
-                  : AppColors.black.withOpacity(0.1),
+                  ? AppColors.white.withValues(alpha: 0.1)
+                  : AppColors.black.withValues(alpha: 0.1),
               onDestinationSelected: (value) {
                 context.read<ShopBloc>().add(SelectNavigationEvent(value));
               },
