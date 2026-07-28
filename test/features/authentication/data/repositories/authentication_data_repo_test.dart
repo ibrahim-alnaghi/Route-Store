@@ -3,11 +3,14 @@ import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:route_store/core/failures/server_failures.dart';
 import 'package:route_store/features/authentication/data/datasources/authentication_data_sources.dart';
+import 'package:route_store/features/authentication/data/models/change_password_request_body.dart';
 import 'package:route_store/features/authentication/data/models/login_model/login_model.dart';
 import 'package:route_store/features/authentication/data/models/login_model/login_request_body.dart';
 import 'package:route_store/features/authentication/data/models/reset_password_request_body.dart';
 import 'package:route_store/features/authentication/data/models/signup_model/signup_model.dart';
 import 'package:route_store/features/authentication/data/models/signup_model/signup_request_body.dart';
+import 'package:route_store/features/authentication/data/models/update_profile_model.dart';
+import 'package:route_store/features/authentication/data/models/update_profile_request_body.dart';
 import 'package:route_store/features/authentication/data/repositories/authentication_data_repo.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,6 +31,9 @@ void main() {
       phone: '',
     ));
     registerFallbackValue(ResetPasswordRequestBody(email: '', newPassword: ''));
+    registerFallbackValue(UpdateProfileRequestBody(name: '', email: ''));
+    registerFallbackValue(ChangePasswordRequestBody(
+        currentPassword: '', password: '', rePassword: ''));
   });
 
   setUp(() {
@@ -41,7 +47,8 @@ void main() {
       );
 
   group('AuthenticationDataRepo.login', () {
-    final loginBody = LoginRequestBody(email: 'user@test.com', password: 'dummy-login-pass');
+    final loginBody =
+        LoginRequestBody(email: 'user@test.com', password: 'dummy-login-pass');
     final loginModel = LoginModel(token: 'tok', message: 'ok');
 
     test('should return Right(LoginModel) when datasource succeeds', () async {
@@ -60,7 +67,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with generic message when datasource throws Exception',
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
         () async {
       // arrange
       when(() => mockDataSources.login(any()))
@@ -80,7 +88,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
+    test(
+        'should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
         () async {
       // arrange
       when(() => mockDataSources.login(any()))
@@ -100,7 +109,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with timeout message when datasource throws DioException(connectionTimeout)',
+    test(
+        'should return Left(ServerFailures) with timeout message when datasource throws DioException(connectionTimeout)',
         () async {
       // arrange
       when(() => mockDataSources.login(any()))
@@ -147,7 +157,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with generic message when datasource throws Exception',
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
         () async {
       // arrange
       when(() => mockDataSources.signup(any()))
@@ -167,7 +178,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
+    test(
+        'should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
         () async {
       // arrange
       when(() => mockDataSources.signup(any()))
@@ -201,7 +213,8 @@ void main() {
       expect(result, const Right('Code sent'));
     });
 
-    test('should return Left(ServerFailures) with generic message when datasource throws Exception',
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
         () async {
       // arrange
       when(() => mockDataSources.sendCode(any()))
@@ -221,7 +234,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
+    test(
+        'should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
         () async {
       // arrange
       when(() => mockDataSources.sendCode(any()))
@@ -255,7 +269,8 @@ void main() {
       expect(result, const Right('Verified'));
     });
 
-    test('should return Left(ServerFailures) with generic message when datasource throws Exception',
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
         () async {
       // arrange
       when(() => mockDataSources.verifyCode(any()))
@@ -275,7 +290,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with cancel message when datasource throws DioException(cancel)',
+    test(
+        'should return Left(ServerFailures) with cancel message when datasource throws DioException(cancel)',
         () async {
       // arrange
       when(() => mockDataSources.verifyCode(any()))
@@ -314,7 +330,8 @@ void main() {
       expect(result, const Right('Password reset'));
     });
 
-    test('should return Left(ServerFailures) with generic message when datasource throws Exception',
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
         () async {
       // arrange
       when(() => mockDataSources.restPassword(any()))
@@ -334,7 +351,8 @@ void main() {
       );
     });
 
-    test('should return Left(ServerFailures) with receive timeout message when datasource throws DioException(receiveTimeout)',
+    test(
+        'should return Left(ServerFailures) with receive timeout message when datasource throws DioException(receiveTimeout)',
         () async {
       // arrange
       when(() => mockDataSources.restPassword(any()))
@@ -342,6 +360,182 @@ void main() {
 
       // act
       final result = await sut.restPassword(resetBody);
+
+      // assert
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('Receive timeout with ApiServer'));
+        },
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('AuthenticationDataRepo.updateProfile', () {
+    final updateProfileBody =
+        UpdateProfileRequestBody(name: 'Jane Doe', email: 'jane@test.com');
+    final updateProfileModel = UpdateProfileModel.fromJson(const {
+      'user': {
+        'name': 'Jane Doe',
+        'email': 'jane@test.com',
+      },
+    }, 'tok3');
+
+    test('should return Right(UserEntity) when datasource succeeds', () async {
+      // arrange
+      when(() => mockDataSources.updateProfile(any()))
+          .thenAnswer((_) async => updateProfileModel);
+
+      // act
+      final result = await sut.updateProfile(updateProfileBody);
+
+      // assert
+      expect(result, isA<Right>());
+      result.fold(
+        (_) => fail('Expected Right'),
+        (r) => expect(r, equals(updateProfileModel)),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
+        () async {
+      // arrange
+      when(() => mockDataSources.updateProfile(any()))
+          .thenThrow(Exception('Update failed'));
+
+      // act
+      final result = await sut.updateProfile(updateProfileBody);
+
+      // assert
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, contains('Exception: Update failed'));
+        },
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with connection message when datasource throws DioException(connectionError)',
+        () async {
+      // arrange
+      when(() => mockDataSources.updateProfile(any()))
+          .thenThrow(buildDioException(DioExceptionType.connectionError));
+
+      // act
+      final result = await sut.updateProfile(updateProfileBody);
+
+      // assert
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('No Internet Connection'));
+        },
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with timeout message when datasource throws DioException(connectionTimeout)',
+        () async {
+      // arrange
+      when(() => mockDataSources.updateProfile(any()))
+          .thenThrow(buildDioException(DioExceptionType.connectionTimeout));
+
+      // act
+      final result = await sut.updateProfile(updateProfileBody);
+
+      // assert
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('Connection timeout with api server'));
+        },
+        (_) => fail('Expected Left'),
+      );
+    });
+  });
+
+  group('AuthenticationDataRepo.changePassword', () {
+    final changePasswordBody = ChangePasswordRequestBody(
+        currentPassword: 'dummy-current-pass',
+        password: 'dummy-new-pass',
+        rePassword: 'dummy-new-pass');
+
+    test('should return Right(null) when datasource succeeds', () async {
+      // arrange
+      when(() => mockDataSources.changePassword(any()))
+          .thenAnswer((_) async {});
+
+      // act
+      final result = await sut.changePassword(changePasswordBody);
+
+      // assert
+      expect(result, isA<Right>());
+      result.fold(
+        (_) => fail('Expected Right'),
+        (_) {},
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with generic message when datasource throws Exception',
+        () async {
+      // arrange
+      when(() => mockDataSources.changePassword(any()))
+          .thenThrow(Exception('Wrong current password'));
+
+      // act
+      final result = await sut.changePassword(changePasswordBody);
+
+      // assert
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, contains('Exception: Wrong current password'));
+        },
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with cancel message when datasource throws DioException(cancel)',
+        () async {
+      // arrange
+      when(() => mockDataSources.changePassword(any()))
+          .thenThrow(buildDioException(DioExceptionType.cancel));
+
+      // act
+      final result = await sut.changePassword(changePasswordBody);
+
+      // assert
+      expect(result, isA<Left>());
+      result.fold(
+        (l) {
+          expect(l, isA<ServerFailures>());
+          expect(l.message, equals('Request to ApiServer was canceld'));
+        },
+        (_) => fail('Expected Left'),
+      );
+    });
+
+    test(
+        'should return Left(ServerFailures) with receive timeout message when datasource throws DioException(receiveTimeout)',
+        () async {
+      // arrange
+      when(() => mockDataSources.changePassword(any()))
+          .thenThrow(buildDioException(DioExceptionType.receiveTimeout));
+
+      // act
+      final result = await sut.changePassword(changePasswordBody);
 
       // assert
       expect(result, isA<Left>());

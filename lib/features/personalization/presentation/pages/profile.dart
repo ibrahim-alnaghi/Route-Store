@@ -3,9 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/image_strings.dart';
 import '../../../../core/constants/sizes.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../../core/helpers/extensions.dart';
+import '../../../../core/routes/routes.dart';
 import '../../../../core/widgets/app_bar/custom_app_bar.dart';
 import '../../../../core/widgets/images/circular_image.dart';
 import '../../../../core/widgets/texts/section_heading.dart';
+import '../../../authentication/domain/entities/user_entity.dart';
 import '../widgets/profile/profile_menu.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -46,34 +50,18 @@ class UserProfileScreen extends StatelessWidget {
               ),
               ProfileMenu(
                 title: 'Name',
-                value: 'Ebrahim Elnaghy',
-                onTap: () {},
-              ),
-              SizedBox(
-                height: AppSizes.spaceBtwItems.h,
-              ),
-              const Divider(),
-              SizedBox(
-                height: AppSizes.spaceBtwItems.h,
-              ),
-              const SectionHeading(title: 'Personal Information'),
-              SizedBox(
-                height: AppSizes.spaceBtwItems.h,
+                value: getIt<UserEntity>().userName,
+                onTap: () => context.pushNamed(Routes.editProfileScreen),
               ),
               ProfileMenu(
                 title: 'Email',
-                value: 'alnaghy08@gmail.com',
-                onTap: () {},
-              ),
-              ProfileMenu(
-                title: 'Phone',
-                value: '01024247323',
-                onTap: () {},
+                value: getIt<UserEntity>().userEmail,
+                onTap: () => context.pushNamed(Routes.editProfileScreen),
               ),
               ProfileMenu(
                 title: 'Password',
                 value: '**********',
-                onTap: () {},
+                onTap: () => context.pushNamed(Routes.changePasswordScreen),
               ),
             ],
           ),

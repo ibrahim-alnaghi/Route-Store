@@ -23,6 +23,8 @@ import '../../features/authentication/domain/entities/user_entity.dart'
     as _i399;
 import '../../features/authentication/domain/repositories/authentication_domain_repo.dart'
     as _i851;
+import '../../features/authentication/domain/usecases/change_password_use_case.dart'
+    as _i881;
 import '../../features/authentication/domain/usecases/login_use_case.dart'
     as _i938;
 import '../../features/authentication/domain/usecases/rest_password_use_case.dart'
@@ -31,6 +33,8 @@ import '../../features/authentication/domain/usecases/send_code_use_case.dart'
     as _i804;
 import '../../features/authentication/domain/usecases/sign_up_use_case.dart'
     as _i459;
+import '../../features/authentication/domain/usecases/update_profile_use_case.dart'
+    as _i721;
 import '../../features/authentication/domain/usecases/verify_code_use_case.dart'
     as _i121;
 import '../../features/cart/data/datasources/cart_data_source.dart' as _i670;
@@ -201,6 +205,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i650.RemoveCartItemUseCase(gh<_i636.CartDomainRepo>()));
     gh.lazySingleton<_i239.UpdateCartProductQuantityUseCase>(() =>
         _i239.UpdateCartProductQuantityUseCase(gh<_i636.CartDomainRepo>()));
+    gh.lazySingleton<_i881.ChangePasswordUseCase>(() =>
+        _i881.ChangePasswordUseCase(gh<_i851.AuthenticationDomainRepo>()));
+    gh.lazySingleton<_i721.UpdateProfileUseCase>(
+        () => _i721.UpdateProfileUseCase(gh<_i851.AuthenticationDomainRepo>()));
     gh.lazySingleton<_i838.PlaceOrderUseCase>(
         () => _i838.PlaceOrderUseCase(gh<_i925.CheckoutDomainRepo>()));
     return this;
