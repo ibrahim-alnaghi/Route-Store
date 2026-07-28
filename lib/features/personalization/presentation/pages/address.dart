@@ -23,7 +23,9 @@ class UserAddressScreen extends StatelessWidget {
         onPressed: () =>
             context.pushNamed(Routes.addNewAddressScreen).then((value) {
           if (value != null && value == true) {
-            context.read<AdressesBloc>().add(GetAdresses());
+            if (context.mounted) {
+              context.read<AdressesBloc>().add(GetAdresses());
+            }
           }
         }),
         child: const Icon(

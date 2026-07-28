@@ -51,7 +51,7 @@ class ProductCardHorizontal extends StatelessWidget {
                   left: 6.w,
                   child: RoundedContainer(
                     radius: AppSizes.sm,
-                    backgroundColor: AppColors.secondary.withOpacity(0.8),
+                    backgroundColor: AppColors.secondary.withValues(alpha: 0.8),
                     padding: EdgeInsets.symmetric(
                         horizontal: AppSizes.sm.w, vertical: AppSizes.xs.h),
                     child: Text(

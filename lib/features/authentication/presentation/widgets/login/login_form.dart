@@ -31,9 +31,11 @@ class LoginForm extends StatelessWidget {
           CacheHelper.saveData(key: userkey, value: state.user!.toMap())
               .then((value) {
             if (value) {
-              context.pushNamedAndRemoveUntil(
-                Routes.shop,
-              );
+              if (context.mounted) {
+                context.pushNamedAndRemoveUntil(
+                  Routes.shop,
+                );
+              }
             }
           });
         } else if (state.status == RequestStates.failure) {

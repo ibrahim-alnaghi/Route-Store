@@ -26,7 +26,7 @@ void main() {
       );
 
   final fakeOrders = [
-    OrderModel(
+    const OrderModel(
       id: 'order1',
       totalOrderPriceValue: 250,
       paymentMethodTypeValue: 'cash',
@@ -36,7 +36,8 @@ void main() {
   ];
 
   group('OrdersDataRepo.getMyOrders', () {
-    test('should return Right(List<OrderEntity>) when the data source call succeeds',
+    test(
+        'should return Right(List<OrderEntity>) when the data source call succeeds',
         () async {
       // arrange
       when(() => mockDataSource.getMyOrders())

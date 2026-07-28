@@ -17,8 +17,8 @@ class TextFormFieldThemeStyle {
     hintStyle: const TextStyle()
         .copyWith(fontSize: AppSizes.fontSizeSm, color: AppColors.black),
     errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
-    floatingLabelStyle:
-        const TextStyle().copyWith(color: AppColors.black.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle()
+        .copyWith(color: AppColors.black.withValues(alpha: 0.8)),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
       borderSide: BorderSide(width: 1.w, color: AppColors.grey),
@@ -50,8 +50,8 @@ class TextFormFieldThemeStyle {
         .copyWith(fontSize: AppSizes.fontSizeMd, color: AppColors.white),
     hintStyle: const TextStyle()
         .copyWith(fontSize: AppSizes.fontSizeSm, color: AppColors.white),
-    floatingLabelStyle:
-        const TextStyle().copyWith(color: AppColors.white.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle()
+        .copyWith(color: AppColors.white.withValues(alpha: 0.8)),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(AppSizes.inputFieldRadius),
       borderSide: BorderSide(width: 1.w, color: AppColors.darkGrey),
