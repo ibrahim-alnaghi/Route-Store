@@ -4,13 +4,16 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/failures/failures.dart';
 import '../../../../core/failures/server_failures.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/authentication_domain_repo.dart';
 import '../datasources/authentication_data_sources.dart';
+import '../models/change_password_request_body.dart';
 import '../models/login_model/login_model.dart';
 import '../models/login_model/login_request_body.dart';
 import '../models/reset_password_request_body.dart';
 import '../models/signup_model/signup_model.dart';
 import '../models/signup_model/signup_request_body.dart';
+import '../models/update_profile_request_body.dart';
 
 @LazySingleton(as: AuthenticationDomainRepo)
 class AuthenticationDataRepo implements AuthenticationDomainRepo {
@@ -76,6 +79,32 @@ class AuthenticationDataRepo implements AuthenticationDomainRepo {
       ResetPasswordRequestBody body) async {
     try {
       return Right(await loginDataSources.restPassword(body));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failures, UserEntity>> updateProfile(
+      UpdateProfileRequestBody body) async {
+    try {
+      return Right(await loginDataSources.updateProfile(body));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(ServerFailures.fromDioException(e));
+      }
+      return Left(ServerFailures(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failures, void>> changePassword(
+      ChangePasswordRequestBody body) async {
+    try {
+      return Right(await loginDataSources.changePassword(body));
     } catch (e) {
       if (e is DioException) {
         return Left(ServerFailures.fromDioException(e));

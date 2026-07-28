@@ -10,8 +10,12 @@ import '../../features/checkout/domain/entities/order_entity.dart';
 import '../../features/orders/presentation/bloc/orders_bloc.dart';
 import '../../features/orders/presentation/pages/order_details.dart';
 import '../../features/orders/presentation/pages/orders.dart';
+import '../../features/personalization/presentation/bloc/change_password/change_password_bloc.dart';
+import '../../features/personalization/presentation/bloc/edit_profile/edit_profile_bloc.dart';
 import '../../features/personalization/presentation/pages/add_new_address.dart';
 import '../../features/personalization/presentation/pages/address.dart';
+import '../../features/personalization/presentation/pages/change_password.dart';
+import '../../features/personalization/presentation/pages/edit_profile.dart';
 import '../../features/product_details/presentation/blocs/product_details/product_details_bloc.dart';
 import '../../features/product_details/presentation/pages/product_details.dart';
 import '../../features/product_details/presentation/pages/product_reviews.dart';
@@ -162,6 +166,21 @@ class AppRoutes {
       case Routes.userProfileScreen:
         return MaterialPageRoute(
           builder: (context) => const UserProfileScreen(),
+        );
+      case Routes.editProfileScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => EditProfileBloc(updateProfileUseCase: getIt()),
+            child: const EditProfileScreen(),
+          ),
+        );
+      case Routes.changePasswordScreen:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                ChangePasswordBloc(changePasswordUseCase: getIt()),
+            child: const ChangePasswordScreen(),
+          ),
         );
       case Routes.userAddressScreen:
         return MaterialPageRoute(
